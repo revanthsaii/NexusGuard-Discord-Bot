@@ -1,4 +1,4 @@
-# Shield NexusGuard Discord Bot
+# NexusGuard Discord Bot
 
 Advanced Discord moderation & economy bot built with **Python**, **discord.py**, and **SQLite**.
 Designed as a real, production-style project to showcase clean architecture, database use, and Discord bot development skills.
