@@ -112,6 +112,12 @@ Planned improvements include:
 - Logging and analytics (mod logs, transaction logs) using the existing SQLite backend.
 
 ---
+## About the Author
+
+NexusGuard is developed and maintained by **Revanth Sai**, a Computer Science undergraduate with a focus on full‑stack development, algorithms, and practical software projects.
+
+- GitHub: [@revanthsaii](https://github.com/revanthsaii)
+- Email: revanthsaitalluri@gmail.com
 
 ## License
 
