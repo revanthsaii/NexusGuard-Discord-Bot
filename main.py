@@ -29,6 +29,55 @@ class NexusGuardBot(commands.Bot):
                 timestamp REAL
             )'''
         )
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS settings (
+                guild_id INTEGER,
+                key TEXT,
+                value TEXT,
+                PRIMARY KEY (guild_id, key)
+            )'''
+        )
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS mod_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                guild_id INTEGER,
+                action TEXT,
+                user_id INTEGER,
+                mod_id INTEGER,
+                reason TEXT,
+                timestamp REAL
+            )'''
+        )
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS reputation (
+                user_id INTEGER,
+                guild_id INTEGER,
+                xp INTEGER DEFAULT 0,
+                level INTEGER DEFAULT 1,
+                last_xp_time REAL DEFAULT 0,
+                PRIMARY KEY (user_id, guild_id)
+            )'''
+        )
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS jobs (
+                job_id TEXT PRIMARY KEY,
+                name TEXT,
+                min_pay INTEGER,
+                max_pay INTEGER,
+                required_level INTEGER
+            )'''
+        )
+        # Pre-seed some jobs if empty
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) FROM jobs")
+        if cursor.fetchone()[0] == 0:
+            jobs_data = [
+                ("dishwasher", "Dishwasher", 50, 100, 1),
+                ("cashier", "Cashier", 100, 200, 5),
+                ("manager", "Manager", 300, 500, 10),
+                ("ceo", "CEO", 1000, 2000, 25)
+            ]
+            cursor.executemany("INSERT INTO jobs VALUES (?,?,?,?,?)", jobs_data)
 
         conn.commit()
         conn.close()
@@ -41,6 +90,9 @@ class NexusGuardBot(commands.Bot):
         await self.load_extension('cogs.help')
         await self.load_extension('cogs.errors')
         await self.load_extension('cogs.support')
+        await self.load_extension('cogs.config')
+        await self.load_extension('cogs.leveling')
+        await self.load_extension('cogs.dashboard')
         # later:
         # await self.load_extension('cogs.ai')
 
@@ -54,7 +106,7 @@ bot = NexusGuardBot(command_prefix='!', intents=intents, help_command=None)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user} ready in {len(bot.guilds)} guilds')
-    print("✅ All cogs loaded!")
+    print("All cogs loaded!")
     await bot.change_presence(
         activity=discord.Game(name='!help | NexusGuard')
     )
