@@ -1,126 +1,169 @@
 # NexusGuard Discord Bot
 
-NexusGuard is a multipurpose Discord bot built with **Python** and **discord.py** that focuses on server moderation, a rich economy system, fun games, and quality-of-life utilities. It is designed as a clean, extensible project with cogs, SQLite storage, and clear error handling.
-
----
+A multipurpose Discord bot built with **Python** and **discord.py** for server moderation, economy management, fun games, and support ticketing. Designed with clean architecture using cogs, SQLite persistence, and comprehensive error handling.
 
 ## Features
 
-- **Economy**
-  - `!balance` – Check your current balance.
-  - `!work` – Earn money with an hourly cooldown.
-  - `!daily` – Claim a daily reward.
-  - `!pay @user amount` – Send money to other members.
-  - `!shop` – View purchasable items.
-  - `!buy <item> [quantity]` – Buy items from the shop.
-  - `!inventory` / `!inv` – View your owned items.
-  - `!roulette amount` – 50/50 gamble to win or lose money. [web:180][web:183][web:358]
+### Economy System
+- `!balance` – Check your current balance
+- `!work` – Earn money with hourly cooldown
+- `!daily` – Claim daily reward
+- `!pay @user amount` – Send money to other members
+- `!shop` – View purchasable items
+- `!buy item [quantity]` – Buy items from shop
+- `!inventory` / `!inv` – View your owned items
+- `!roulette amount` – 50/50 gamble to win or lose money
 
-- **Leaderboards**
-  - `!leaderboard` / `!lb` / `!top` – Show top richest members in the current server, based on balances stored in SQLite. [web:250][web:253]
+### Leaderboards
+- `/leaderboard [limit]` – Show top richest members in the server
+- Per-guild balance tracking with SQLite backend
+- Slash-command support for modern Discord experience
 
-- **Moderation**
-  - Modular moderation commands (e.g., kick/ban, clear, etc.) organized in a dedicated cog and integrated with global error handling. *(Commands depend on the current version of `cogs/moderation.py`.)* [web:169][web:191]
+### Moderation
+- `/kick @user [reason]` – Kick a user from the server
+- `/ban @user [reason]` – Ban a user from the server
+- `/timeout @user minutes [reason]` – Temporarily mute a user
+- `/untimeout @user` – Remove timeout
+- `/purge amount` – Delete up to 100 messages
+- `/warn @user reason` – Issue a warning
+- `/warnings @user` – View user's warning history
+- **Mod Logs** – All moderation actions logged to designated channel
+- **Database Logging** – Actions stored in SQLite for audit trail
 
-- **Games**
-  - Fun mini‑games implemented as separate cogs (e.g., tic‑tac‑toe and more), using the same command framework and embed style. [web:169]
+### Automod & Safety
+- Bad word filtering with automatic message deletion
+- Spam detection (5+ messages in 5 seconds triggers timeout)
+- Configurable per-guild settings
+- Automatic logging of automod actions
 
-- **Custom Help & Error Handling**
-  - Custom `!help` command with embeds showing commands grouped by cog and short descriptions.
-  - Global error handler cog that converts common errors (missing arguments, missing permissions, cooldowns) into user‑friendly messages instead of raw tracebacks. [web:187][web:295][web:304]
+### Support Ticket System
+- `/ticketpanel` – Spawn ticket creation panel
+- Three ticket types: General Support, Bug Report, Ban Appeal
+- Auto-created channels with proper permissions
+- `/close` button for ticket closure
+- `/ticket_stats` – View open ticket statistics
 
----
+### Games
+- `/tictactoe @opponent` – Play Tic-Tac-Toe with another user
+- `/rps` – Rock Paper Scissors against the bot
+- `/coinflip` – Flip a coin
+- `/trivia` – Answer random trivia questions
+- Interactive button-based gameplay
+
+### Utilities
+- Custom `/help` command with command grouping by cog
+- Global error handler with user-friendly messages
+- Prefix & slash-command support
+- Per-guild configuration ready (foundation in place)
 
 ## Tech Stack
 
 - **Language:** Python 3.12+
-- **Library:** [discord.py](https://discordpy.readthedocs.io/en/stable/) commands extension (prefix commands). [web:169][web:380]
-- **Database:** SQLite (`bot.db`) for persistent economy and inventory data.
-- **Structure:** Cog-based architecture (`cogs/`) with a custom `NexusGuardBot` class and `setup_hook` for database initialization and cog loading. [web:182][web:191]
+- **Library:** [discord.py](https://discordpy.readthedocs.io/) 2.x
+- **Database:** SQLite (`bot.db`) for economy, inventory, warnings, mod logs, and settings
+- **Architecture:** Cog-based modular design with custom bot class
+- **Error Handling:** Global error handler cog for consistent UX
 
----
+## Database Schema
+
+- **economy** – User balances per guild (user_id, guild_id, balance)
+- **inventory** – User items per guild (user_id, guild_id, item_name, quantity)
+- **warnings** – Moderation warnings (user_id, guild_id, reason, mod_id, timestamp)
+- **mod_logs** – All moderation actions (guild_id, action, user_id, mod_id, reason, timestamp)
+- **settings** – Per-guild configuration (guild_id, key, value)
 
 ## Getting Started
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
+```bash
 git clone https://github.com/revanthsaii/NexusGuard-Discord-Bot.git
 cd NexusGuard-Discord-Bot
+```
 
+### 2. Install Dependencies
 
-### 2. Install dependencies
+Requires Python 3.12+:
 
-Make sure you have Python 3.12+ installed.
-
+```bash
 pip install -r requirements.txt
+```
 
-### 3. Configure environment variables
+### 3. Configure Environment
 
 Create a `.env` file in the project root:
 
-DISCORD_TOKEN=your_real_discord_bot_token_here
+```
+DISCORD_TOKEN=your_bot_token_here
+```
 
+Get your token from [Discord Developer Portal](https://discord.com/developers/applications).
 
-- The token is **not** committed to Git and stays only in this file. [web:165][web:168]
+### 4. Run Locally
 
-### 4. Run the bot locally
-
+```bash
 python main.py
+```
 
-You should see a log similar to:
+You should see:
+```
+Logged in as NexusGuard#1234 ready in X guilds
+All cogs loaded!
+```
 
-🚀 NexusGuard#1234 ready in X guilds
-✅ All cogs loaded!
-
-Use `!help` in your server to see all available commands.
-
----
-
-## Economy & Database Design
-
-- Balances are stored in an `economy` table with per‑guild rows:
-
-  - `user_id` – Discord user ID.
-  - `guild_id` – Server ID.
-  - `balance` – User’s balance in that server.
-
-- Inventory is stored in an `inventory` table:
-
-  - `user_id`, `guild_id`, `item_name`, `quantity`.
-
-- All queries are kept simple and explicit (no ORMs), using helper methods like `get_balance`, `change_balance`, and `get_inventory` for reuse across commands. [web:180][web:200][web:359]
-
----
+Use `/help` in any Discord server to see all commands.
 
 ## Deployment
 
-NexusGuard is designed to run 24/7 on:
+NexusGuard is designed for 24/7 uptime on:
 
-- A small **Linux VPS** (Ubuntu) using `systemd`:
-  - `NexusGuardBot` creates the database and loads all cogs in `setup_hook`.
-  - A systemd service can keep the bot online across reboots with automatic restart. [web:118][web:182]
-- Or free / student‑friendly platforms (bot hosts or cloud credits) for persistent uptime during development. [web:100][web:110][web:120]
+- **Linux VPS (Ubuntu)** with systemd service for auto-restart
+- **Docker** for containerized deployment
+- **Student hosting** or cloud providers with persistent uptime
 
----
+The bot initializes the SQLite database and loads all cogs automatically on startup.
 
-## Roadmap
+## Project Structure
 
-Planned improvements include:
+```
+.
+├── main.py                 # Bot initialization & database setup
+├── cogs/
+│   ├── economy.py         # Economy commands and balance management
+│   ├── moderation.py      # Moderation & logging
+│   ├── support.py         # Support ticket system
+│   ├── games.py           # Fun mini-games
+│   ├── leaderboard.py     # Ranking & statistics
+│   ├── help.py            # Custom help command
+│   ├── errors.py          # Global error handler
+│   └── ai.py              # AI features (future)
+├── requirements.txt        # Python dependencies
+├── .env.example           # Environment template
+└── README.md              # This file
+```
 
-- Slash-command versions of core features for a more modern Discord experience.
-- Additional games and advanced economy mechanics (e.g., stock market, jobs, or quests). [web:183][web:356]
-- Logging and analytics (mod logs, transaction logs) using the existing SQLite backend.
+## Development Notes
 
----
+**Code Quality:**
+- Clean separation of concerns with cogs
+- Reusable database helper methods
+- Consistent embed styling and error messages
+- Per-guild data isolation for multi-server support
+
+**Future Improvements:**
+- Slash-command migration for all features
+- Advanced economy (stock market, jobs, quests)
+- User reputation & XP tracking
+- Server analytics dashboard
+- Multi-language support
+
 ## About the Author
 
-NexusGuard is developed and maintained by **Revanth Sai**, a Computer Science undergraduate with a focus on full‑stack development, algorithms, and practical software projects.
+NexusGuard is developed by **Revanth Sai**, a Computer Science undergraduate focusing on full-stack development, algorithms, and practical software engineering.
 
-- GitHub: [@revanthsaii](https://github.com/revanthsaii)
-- Email: revanthsaitalluri@gmail.com
+- **GitHub:** [@revanthsaii](https://github.com/revanthsaii)
+- **Email:** [revanthsaitalluri@gmail.com](mailto:revanthsaitalluri@gmail.com)
 
 ## License
 
-This project is licensed under the **MIT License**.
-
-See the [LICENSE](LICENSE) file for full license text.
+This project is licensed under the **MIT License** – see [LICENSE](./LICENSE) for details.
