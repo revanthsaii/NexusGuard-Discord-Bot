@@ -5,14 +5,14 @@ A multipurpose Discord bot built with **Python** and **discord.py** for server m
 ## Features
 
 ### Economy System
-- `!balance` – Check your current balance
-- `!work` – Earn money with hourly cooldown
-- `!daily` – Claim daily reward
-- `!pay @user amount` – Send money to other members
-- `!shop` – View purchasable items
-- `!buy item [quantity]` – Buy items from shop
-- `!inventory` / `!inv` – View your owned items
-- `!roulette amount` – 50/50 gamble to win or lose money
+- `/balance` – Check your current balance
+- `/work` – Earn money with hourly cooldown
+- `/daily` – Claim daily reward
+- `/pay @user amount` – Send money to other members
+- `/shop` – View purchasable items
+- `/buy item [quantity]` – Buy items from shop
+- `/inventory` / `/inv` – View your owned items
+- `/roulette amount` – 50/50 gamble to win or lose money
 
 ### Leaderboards
 - `/leaderboard [limit]` – Show top richest members in the server
