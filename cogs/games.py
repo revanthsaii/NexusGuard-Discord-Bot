@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 from discord import ui
+import random
+import asyncio
+
+# --- Tic Tac Toe Classes ---
 
 class TicTacToeButton(ui.Button):
     def __init__(self, x: int, y: int):
@@ -100,6 +104,50 @@ class TicTacToe(ui.View):
         for child in self.children:
             child.disabled = True
 
+# --- Rock Paper Scissors Classes ---
+
+class RPSView(ui.View):
+    def __init__(self, ctx):
+        super().__init__(timeout=60)
+        self.ctx = ctx
+        self.bot_choice = random.choice(["rock", "paper", "scissors"])
+
+    @discord.ui.button(label="Rock", style=discord.ButtonStyle.primary, emoji="🪨")
+    async def rock(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.process_turn(interaction, "rock")
+
+    @discord.ui.button(label="Paper", style=discord.ButtonStyle.primary, emoji="📄")
+    async def paper(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.process_turn(interaction, "paper")
+
+    @discord.ui.button(label="Scissors", style=discord.ButtonStyle.primary, emoji="✂️")
+    async def scissors(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.process_turn(interaction, "scissors")
+
+    async def process_turn(self, interaction: discord.Interaction, user_choice: str):
+        if interaction.user != self.ctx.author:
+            await interaction.response.send_message("This isn't your game!", ephemeral=True)
+            return
+
+        for child in self.children:
+            child.disabled = True
+            
+        result = ""
+        win_msg = f"I chose **{self.bot_choice}**."
+        
+        if user_choice == self.bot_choice:
+            result = "It's a tie! 🤝"
+        elif (user_choice == "rock" and self.bot_choice == "scissors") or \
+             (user_choice == "paper" and self.bot_choice == "rock") or \
+             (user_choice == "scissors" and self.bot_choice == "paper"):
+            result = "You won! 🎉"
+        else:
+            result = "You lost! 😢"
+
+        await interaction.response.edit_message(content=f"{win_msg}\n{result}", view=self)
+        self.stop()
+
+# --- Main Games Cog ---
 
 class Games(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -121,6 +169,65 @@ class Games(commands.Cog):
             f"{ctx.author.mention} goes first!",
             view=view,
         )
+
+    @commands.command(name="rps")
+    async def rps(self, ctx):
+        """Play Rock Paper Scissors against the bot"""
+        view = RPSView(ctx)
+        await ctx.send("Choose your move!", view=view)
+
+    @commands.command(name="coinflip")
+    async def coinflip(self, ctx):
+        """Flip a coin"""
+        result = random.choice(["Heads", "Tails"])
+        emoji = "🪙"
+        await ctx.send(f"{emoji} It's **{result}**!")
+
+    @commands.command(name="trivia")
+    async def trivia(self, ctx):
+        """Answer a random trivia question"""
+        # Simple local trivia database
+        questions = [
+            {"q": "What is the capital of France?", "a": "Paris", "o": ["London", "Berlin", "Madrid"]},
+            {"q": "Which planet is known as the Red Planet?", "a": "Mars", "o": ["Venus", "Jupiter", "Saturn"]},
+            {"q": "What is the largest mammal?", "a": "Blue Whale", "o": ["Elephant", "Giraffe", "Shark"]},
+            {"q": "Who wrote 'Romeo and Juliet'?", "a": "Shakespeare", "o": ["Hemingway", "Dickens", "Twain"]},
+            {"q": "What is the chemical symbol for Gold?", "a": "Au", "o": ["Ag", "Fe", "Cu"]},
+        ]
+        
+        q_data = random.choice(questions)
+        options = q_data["o"] + [q_data["a"]]
+        random.shuffle(options)
+        
+        correct_index = options.index(q_data["a"])
+        
+        desc = q_data["q"] + "\n\n"
+        for i, opt in enumerate(options):
+            desc += f"{i+1}. {opt}\n"
+            
+        embed = discord.Embed(title="🧠 Trivia Time", description=desc, color=discord.Color.blue())
+        embed.set_footer(text="Type the number of your answer (1-4)!")
+        
+        await ctx.send(embed=embed)
+        
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel and m.content.isdigit()
+            
+        try:
+            msg = await self.bot.wait_for('message', check=check, timeout=15.0)
+            ans = int(msg.content)
+            
+            if 1 <= ans <= 4:
+                if options[ans-1] == q_data["a"]:
+                    await ctx.send(f"✅ Correct! The answer was **{q_data['a']}**.")
+                else:
+                    await ctx.send(f"❌ Wrong! The correct answer was **{q_data['a']}**.")
+            else:
+                 await ctx.send("❌ Invalid number.")
+                 
+        except asyncio.TimeoutError:
+            await ctx.send(f"⏰ Time's up! The answer was **{q_data['a']}**.")
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Games(bot))

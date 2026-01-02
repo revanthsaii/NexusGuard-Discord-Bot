@@ -12,13 +12,23 @@ class NexusGuardBot(commands.Bot):
         # Create database if it doesn't exist
         conn = sqlite3.connect('bot.db')
         conn.execute(
-    '''CREATE TABLE IF NOT EXISTS economy (
-           user_id INTEGER,
-           guild_id INTEGER,
-           balance INTEGER DEFAULT 0,
-           PRIMARY KEY (user_id, guild_id)
-       )'''
-)
+            '''CREATE TABLE IF NOT EXISTS economy (
+                user_id INTEGER,
+                guild_id INTEGER,
+                balance INTEGER DEFAULT 0,
+                PRIMARY KEY (user_id, guild_id)
+            )'''
+        )
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS warnings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                guild_id INTEGER,
+                reason TEXT,
+                moderator_id INTEGER,
+                timestamp REAL
+            )'''
+        )
 
         conn.commit()
         conn.close()
@@ -30,6 +40,7 @@ class NexusGuardBot(commands.Bot):
         await self.load_extension('cogs.games')
         await self.load_extension('cogs.help')
         await self.load_extension('cogs.errors')
+        await self.load_extension('cogs.support')
         # later:
         # await self.load_extension('cogs.ai')
 
@@ -42,7 +53,7 @@ bot = NexusGuardBot(command_prefix='!', intents=intents, help_command=None)
 
 @bot.event
 async def on_ready():
-    print(f'🚀 {bot.user} ready in {len(bot.guilds)} guilds')
+    print(f'Logged in as {bot.user} ready in {len(bot.guilds)} guilds')
     print("✅ All cogs loaded!")
     await bot.change_presence(
         activity=discord.Game(name='!help | NexusGuard')
