@@ -93,8 +93,7 @@ class NexusGuardBot(commands.Bot):
         await self.load_extension('cogs.config')
         await self.load_extension('cogs.leveling')
         await self.load_extension('cogs.dashboard')
-        # later:
-        # await self.load_extension('cogs.ai')
+        await self.load_extension('cogs.ai')
 
 
 intents = discord.Intents.default()
