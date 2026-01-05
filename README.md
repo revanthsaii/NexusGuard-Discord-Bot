@@ -103,6 +103,7 @@ Create a `.env` file in the project root:
 
 ```
 DISCORD_TOKEN=your_bot_token_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 Get your token from [Discord Developer Portal](https://discord.com/developers/applications).
