@@ -43,6 +43,14 @@ A multipurpose Discord bot built with **Python** and **discord.py** for server m
 - `/close` button for ticket closure
 - `/ticket_stats` – View open ticket statistics
 
+- ### Advanced AI Chat
+
+- `/ask question` – Ask NexusGuard anything (AI Powered with Google Generative AI)
+- **Mention Handling** – Reply to the bot when it's mentioned in a channel
+- **Async Processing** – Fast, non-blocking AI responses
+- **Message Splitting** – Automatically handles long responses (>2000 chars)
+- **Context-Aware Responses** – AI understands you're chatting with a Discord bot
+
 ### Games
 - `/tictactoe @opponent` – Play Tic-Tac-Toe with another user
 - `/rps` – Rock Paper Scissors against the bot
@@ -136,7 +144,7 @@ The bot initializes the SQLite database and loads all cogs automatically on star
 │   ├── leaderboard.py     # Ranking & statistics
 │   ├── help.py            # Custom help command
 │   ├── errors.py          # Global error handler
-│   └── ai.py              # AI features (future)
+│   └── ai.py              # AI Chat with Google Generative AI (Gemini)
 ├── requirements.txt        # Python dependencies
 ├── .env.example           # Environment template
 └── README.md              # This file
