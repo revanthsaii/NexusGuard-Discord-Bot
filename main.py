@@ -79,6 +79,28 @@ class NexusGuardBot(commands.Bot):
             ]
             cursor.executemany("INSERT INTO jobs VALUES (?,?,?,?,?)", jobs_data)
 
+        # Cooldowns table for economy commands
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS cooldowns (
+                user_id INTEGER,
+                guild_id INTEGER,
+                command TEXT,
+                last_used REAL,
+                PRIMARY KEY (user_id, guild_id, command)
+            )'''
+        )
+        
+        # Investments table
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS investments (
+                user_id INTEGER,
+                guild_id INTEGER,
+                amount INTEGER DEFAULT 0,
+                invested_at REAL,
+                PRIMARY KEY (user_id, guild_id)
+            )'''
+        )
+
         conn.commit()
         conn.close()
 
