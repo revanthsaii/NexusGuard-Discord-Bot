@@ -55,8 +55,16 @@ class ReactionRoles(commands.Cog):
             roles_data = cur.fetchall()
             conn.close()
             
-            # We don't have guild context here, so we'll skip re-adding views on ready
-            # Views will be added when panel is created
+            # Find the message in all guilds and re-attach the view
+            for guild in self.bot.guilds:
+                for channel in guild.text_channels:
+                    try:
+                        message = await channel.fetch_message(msg_id)
+                        view = ReactionRoleView(guild, roles_data)
+                        self.bot.add_view(view, message_id=msg_id)
+                        break
+                    except:
+                        continue
 
     @app_commands.command(name="reactionrole", description="Create a reaction role panel")
     @app_commands.checks.has_permissions(administrator=True)
