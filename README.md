@@ -1,178 +1,175 @@
 # NexusGuard Discord Bot
 
-A multipurpose Discord bot built with **Python** and **discord.py** for server moderation, economy management, fun games, and support ticketing. Designed with clean architecture using cogs, SQLite persistence, and comprehensive error handling.
+A **feature-rich, pro-level Discord bot** built with Python and discord.py. Includes AI chat, advanced economy, comprehensive moderation, AutoMod, games, leveling, support tickets, and more!
 
-## Features
+![Python](https://img.shields.io/badge/Python-3.12+-blue?logo=python)
+![discord.py](https://img.shields.io/badge/discord.py-2.x-5865F2?logo=discord)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-### Economy System
-- `/balance` – Check your current balance
-- `/work` – Earn money with hourly cooldown
-- `/daily` – Claim daily reward
-- `/pay @user amount` – Send money to other members
-- `/shop` – View purchasable items
-- `/buy item [quantity]` – Buy items from shop
-- `/inventory` / `/inv` – View your owned items
-- `/roulette amount` – 50/50 gamble to win or lose money
+## ✨ Features
 
-### Leaderboards
-- `/leaderboard [limit]` – Show top richest members in the server
-- Per-guild balance tracking with SQLite backend
-- Slash-command support for modern Discord experience
+### 🤖 AI Chat (Powered by Gemini)
+- `@NexusGuard <message>` – Chat naturally with the bot
+- `/ask <question>` – Ask anything and get AI-powered responses
+- Context-aware responses with Discord bot persona
 
-### Moderation
-- `/kick @user [reason]` – Kick a user from the server
-- `/ban @user [reason]` – Ban a user from the server
-- `/timeout @user minutes [reason]` – Temporarily mute a user
-- `/untimeout @user` – Remove timeout
-- `/purge amount` – Delete up to 100 messages
-- `/warn @user reason` – Issue a warning
-- `/warnings @user` – View user's warning history
-- **Mod Logs** – All moderation actions logged to designated channel
-- **Database Logging** – Actions stored in SQLite for audit trail
+### 💰 Advanced Economy System
+- **Banking**: `/balance`, `/deposit`, `/withdraw` – Separate wallet and bank
+- **Earning**: `/work`, `/daily`, `/crime` – Multiple ways to earn
+- **Crime System**: `/rob @user` – Steal from others (with risk!)
+- **Gambling**: `/coinflip`, `/slots`, `/roulette` – Win big or lose it all
+- **Shop**: `/shop`, `/buy`, `/inventory` – Purchase and use items
+- **Jobs**: `/jobs` – Unlock higher-paying jobs as you level up
+- **Cooldowns**: Database-backed cooldowns for all commands
+- **Interest**: 2% daily interest on bank balance
 
-### Automod & Safety
-- Bad word filtering with automatic message deletion
-- Spam detection (5+ messages in 5 seconds triggers timeout)
-- Configurable per-guild settings
-- Automatic logging of automod actions
+### 🛡️ Comprehensive AutoMod
+- `/automod settings` – View current configuration
+- `/automod toggle <feature>` – Enable/disable features:
+  - **Anti-Spam** – Auto-timeout for message spam
+  - **Anti-Links** – Block all URLs
+  - **Anti-Invites** – Block Discord invite links
+  - **Anti-Caps** – Block excessive caps
+  - **Anti-Mentions** – Block mention spam
+- `/automod addword <word>` – Add custom banned words
+- `/automod whitelist <channel>` – Exclude channels from AutoMod
 
-### Support Ticket System
-- `/ticketpanel` – Spawn ticket creation panel
-- Three ticket types: General Support, Bug Report, Ban Appeal
-- Auto-created channels with proper permissions
-- `/close` button for ticket closure
-- `/ticket_stats` – View open ticket statistics
+### 👮 Moderation
+- `/kick`, `/ban`, `/timeout`, `/untimeout` – User management
+- `/warn`, `/warnings` – Warning system with history
+- `/purge` – Bulk delete messages
+- **Mod Logs** – All actions logged to designated channel
+- **Database Logging** – Full audit trail in SQLite
 
-- ### Advanced AI Chat
+### 📊 Leveling & XP System
+- Automatic XP gain from chatting
+- `/rank` – View your level and XP progress
+- `/levels` – Server XP leaderboard
 
-- `/ask question` – Ask NexusGuard anything (AI Powered with Google Generative AI)
-- **Mention Handling** – Reply to the bot when it's mentioned in a channel
-- **Async Processing** – Fast, non-blocking AI responses
-- **Message Splitting** – Automatically handles long responses (>2000 chars)
-- **Context-Aware Responses** – AI understands you're chatting with a Discord bot
-
-### Games
-- `/tictactoe @opponent` – Play Tic-Tac-Toe with another user
-- `/rps` – Rock Paper Scissors against the bot
+### 🎮 Games
+- `/tictactoe @user` – Play Tic-Tac-Toe
+- `/rps` – Rock Paper Scissors
 - `/coinflip` – Flip a coin
-- `/trivia` – Answer random trivia questions
-- Interactive button-based gameplay
+- `/trivia` – Answer trivia questions
 
-### Utilities
-- Custom `/help` command with command grouping by cog
-- Global error handler with user-friendly messages
-- Prefix & slash-command support
-- Per-guild configuration ready (foundation in place)
+### 🎫 Support Tickets
+- `/ticketpanel` – Create ticket panel with categories
+- Smart tickets: General Support, Bug Report, Ban Appeal
+- `/ticket_stats` – View open ticket statistics
+- Auto-created private channels with proper permissions
 
-## Tech Stack
+### 🖼️ Welcome System
+- `/welcomesetup` – Configure welcome messages
+- Auto-role assignment for new members
+- Custom welcome channel
 
-- **Language:** Python 3.12+
-- **Library:** [discord.py](https://discordpy.readthedocs.io/) 2.x
-- **Database:** SQLite (`bot.db`) for economy, inventory, warnings, mod logs, and settings
-- **Architecture:** Cog-based modular design with custom bot class
-- **Error Handling:** Global error handler cog for consistent UX
+### 🎭 Reaction Roles
+- `/reactionrole` – Create self-assignable role panels
+- Button-based role selection
+- Persistent across bot restarts
 
-## Database Schema
+### 📊 Polls
+- `/poll` – Create interactive polls with progress bars
+- Anonymous voting with live results
 
-- **economy** – User balances per guild (user_id, guild_id, balance)
-- **inventory** – User items per guild (user_id, guild_id, item_name, quantity)
-- **warnings** – Moderation warnings (user_id, guild_id, reason, mod_id, timestamp)
-- **mod_logs** – All moderation actions (guild_id, action, user_id, mod_id, reason, timestamp)
-- **settings** – Per-guild configuration (guild_id, key, value)
+### 🛠️ Utilities
+- `/remind <time> <message>` – Set reminders
+- `/avatar [user]` – View user's avatar
+- `/userinfo [user]` – Detailed user information
+- `/server health` – Server safety and activity scores
 
-## Getting Started
+### ⚙️ Configuration
+- `/config` – Server-wide bot configuration
+- Per-guild settings stored in database
+- `!sync` – Sync slash commands (admin only)
+
+## 🚀 Quick Start
 
 ### 1. Clone the Repository
-
 ```bash
 git clone https://github.com/revanthsaii/NexusGuard-Discord-Bot.git
 cd NexusGuard-Discord-Bot
 ```
 
 ### 2. Install Dependencies
-
-Requires Python 3.12+:
-
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Configure Environment
-
-Create a `.env` file in the project root:
-
-```
+Create a `.env` file:
+```env
 DISCORD_TOKEN=your_bot_token_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-Get your token from [Discord Developer Portal](https://discord.com/developers/applications).
-
-### 4. Run Locally
-
+### 4. Run the Bot
 ```bash
 python main.py
 ```
 
-You should see:
-```
-Logged in as NexusGuard#1234 ready in X guilds
-All cogs loaded!
-```
+### 5. Sync Commands
+Run `!sync` in your Discord server (admin only) to register slash commands.
 
-Use `/help` in any Discord server to see all commands.
-
-## Deployment
-
-NexusGuard is designed for 24/7 uptime on:
-
-- **Linux VPS (Ubuntu)** with systemd service for auto-restart
-- **Docker** for containerized deployment
-- **Student hosting** or cloud providers with persistent uptime
-
-The bot initializes the SQLite database and loads all cogs automatically on startup.
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-.
-├── main.py                 # Bot initialization & database setup
+NexusGuard-Discord-Bot/
+├── main.py              # Bot initialization & database setup
 ├── cogs/
-│   ├── economy.py         # Economy commands and balance management
-│   ├── moderation.py      # Moderation & logging
-│   ├── support.py         # Support ticket system
-│   ├── games.py           # Fun mini-games
-│   ├── leaderboard.py     # Ranking & statistics
-│   ├── help.py            # Custom help command
-│   ├── errors.py          # Global error handler
-│   └── ai.py              # AI Chat with Google Generative AI (Gemini)
-├── requirements.txt        # Python dependencies
-├── .env.example           # Environment template
-└── README.md              # This file
+│   ├── ai.py           # AI chat with Gemini
+│   ├── automod.py      # AutoMod system
+│   ├── config.py       # Server configuration
+│   ├── dashboard.py    # Server health dashboard
+│   ├── economy.py      # Advanced economy system
+│   ├── errors.py       # Global error handler
+│   ├── games.py        # Mini-games
+│   ├── help.py         # Custom help command
+│   ├── leaderboard.py  # Economy leaderboard
+│   ├── leveling.py     # XP & leveling system
+│   ├── moderation.py   # Moderation commands
+│   ├── polls.py        # Interactive polls
+│   ├── reactionroles.py # Self-assignable roles
+│   ├── support.py      # Ticket system
+│   ├── utility.py      # Utility commands
+│   └── welcome.py      # Welcome system
+├── requirements.txt
+├── .env.example
+└── README.md
 ```
 
-## Development Notes
+## 🗄️ Database Schema
 
-**Code Quality:**
-- Clean separation of concerns with cogs
-- Reusable database helper methods
-- Consistent embed styling and error messages
-- Per-guild data isolation for multi-server support
+| Table | Purpose |
+|-------|---------|
+| `economy` | User wallets and bank balances |
+| `inventory` | User items |
+| `warnings` | Moderation warnings |
+| `mod_logs` | All moderation actions |
+| `settings` | Per-guild configuration |
+| `reputation` | XP and levels |
+| `jobs` | Available jobs with requirements |
+| `cooldowns` | Command cooldown tracking |
+| `investments` | User investments |
+| `automod_settings` | AutoMod configuration |
+| `banned_words` | Custom banned words per guild |
+| `reaction_roles` | Reaction role panels |
 
-**Future Improvements:**
-- Slash-command migration for all features
-- Advanced economy (stock market, jobs, quests)
-- User reputation & XP tracking
-- Server analytics dashboard
-- Multi-language support
+## 🔧 Tech Stack
 
-## About the Author
+- **Language:** Python 3.12+
+- **Library:** discord.py 2.x
+- **AI:** Google Generative AI (Gemini)
+- **Database:** SQLite
+- **Architecture:** Cog-based modular design
 
-NexusGuard is developed by **Revanth Sai**, a Computer Science undergraduate focusing on full-stack development, algorithms, and practical software engineering.
+## 👨‍💻 Author
 
-- **GitHub:** [@revanthsaii](https://github.com/revanthsaii)
-- **Email:** [revanthsaitalluri@gmail.com](mailto:revanthsaitalluri@gmail.com)
+**Revanth Sai** – Computer Science undergraduate
 
-## License
+- GitHub: [@revanthsaii](https://github.com/revanthsaii)
+- Email: revanthsaitalluri@gmail.com
+
+## 📄 License
 
 This project is licensed under the **MIT License** – see [LICENSE](./LICENSE) for details.
