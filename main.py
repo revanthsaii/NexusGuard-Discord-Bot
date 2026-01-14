@@ -120,6 +120,7 @@ class NexusGuardBot(commands.Bot):
         await self.load_extension('cogs.reactionroles')
         await self.load_extension('cogs.polls')
         await self.load_extension('cogs.utility')
+        await self.load_extension('cogs.automod')
 
 
 intents = discord.Intents.default()
