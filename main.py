@@ -101,6 +101,42 @@ class NexusGuardBot(commands.Bot):
             )'''
         )
 
+        # Giveaways table
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS giveaways (
+                message_id INTEGER PRIMARY KEY,
+                channel_id INTEGER,
+                guild_id INTEGER,
+                host_id INTEGER,
+                winner_count INTEGER,
+                prize TEXT,
+                end_time REAL,
+                ended INTEGER DEFAULT 0
+            )'''
+        )
+
+        # Starboard entries
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS starboard_entries (
+                original_message_id INTEGER PRIMARY KEY,
+                starboard_message_id INTEGER,
+                channel_id INTEGER,
+                guild_id INTEGER
+            )'''
+        )
+
+        # Suggestions table
+        conn.execute(
+            '''CREATE TABLE IF NOT EXISTS suggestions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                guild_id INTEGER,
+                user_id INTEGER,
+                message_id INTEGER,
+                content TEXT,
+                status TEXT DEFAULT 'Pending'
+            )'''
+        )
+
         conn.commit()
         conn.close()
 
