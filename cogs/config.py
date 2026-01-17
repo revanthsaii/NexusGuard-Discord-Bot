@@ -42,6 +42,26 @@ class ConfigView(discord.ui.View):
         self._save_setting(interaction.guild_id, "automod_level", level)
         await interaction.response.send_message(f"✅ Automod level set to **{level}**", ephemeral=True)
 
+    @discord.ui.select(
+        placeholder="Select Starboard Channel",
+        cls=discord.ui.ChannelSelect,
+        channel_types=[discord.ChannelType.text]
+    )
+    async def select_starboard(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect):
+        channel = select.values[0]
+        self._save_setting(interaction.guild_id, "starboard_channel", str(channel.id))
+        await interaction.response.send_message(f"✅ Starboard channel set to {channel.mention}", ephemeral=True)
+
+    @discord.ui.select(
+        placeholder="Select Suggestions Channel",
+        cls=discord.ui.ChannelSelect,
+        channel_types=[discord.ChannelType.text]
+    )
+    async def select_suggestions(self, interaction: discord.Interaction, select: discord.ui.ChannelSelect):
+        channel = select.values[0]
+        self._save_setting(interaction.guild_id, "suggestions_channel", str(channel.id))
+        await interaction.response.send_message(f"✅ Suggestions channel set to {channel.mention}", ephemeral=True)
+
     def _save_setting(self, guild_id, key, value):
         conn = sqlite3.connect('bot.db')
         conn.execute(
@@ -102,7 +122,10 @@ class Config(commands.Cog):
         # Fetch current settings
         log_channel_id = self.get_setting(interaction.guild_id, "mod_log_channel")
         ticket_cat_id = self.get_setting(interaction.guild_id, "ticket_category")
+        ticket_cat_id = self.get_setting(interaction.guild_id, "ticket_category")
         automod_lvl = self.get_setting(interaction.guild_id, "automod_level")
+        starboard_id = self.get_setting(interaction.guild_id, "starboard_channel")
+        suggestions_id = self.get_setting(interaction.guild_id, "suggestions_channel")
 
         # Resolve IDs to names/mentions
         log_channel = f"<#{log_channel_id}>" if log_channel_id.isdigit() else log_channel_id
@@ -116,6 +139,12 @@ class Config(commands.Cog):
         embed.add_field(name="📜 Mod Log Channel", value=log_channel, inline=False)
         embed.add_field(name="🎫 Ticket Category", value=ticket_cat, inline=False)
         embed.add_field(name="🛡️ Automod Level", value=automod_lvl, inline=False)
+        
+        starboard = f"<#{starboard_id}>" if starboard_id.isdigit() else starboard_id
+        suggestions = f"<#{suggestions_id}>" if suggestions_id.isdigit() else suggestions_id
+        
+        embed.add_field(name="⭐ Starboard Channel", value=starboard, inline=False)
+        embed.add_field(name="💡 Suggestions Channel", value=suggestions, inline=False)
         embed.set_footer(text="Use the dropdowns below to edit settings")
 
         view = ConfigView(self.bot, interaction.guild_id)
